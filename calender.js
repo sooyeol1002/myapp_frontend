@@ -92,10 +92,10 @@ function calendarInit() {
 
 // 입/출금 페이지로 이동
 function goToManagePage() {
-    window.location.href = 'project3.html';
+    window.location.href = 'deposit-withdrawal.html';
   }
 
 // 차트 페이지로 이동
 function goToChartPage() {
-    window.location.href = 'project5.html';
+    window.location.href = 'chart.html';
   }

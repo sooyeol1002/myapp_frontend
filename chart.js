@@ -81,10 +81,10 @@ const myLineChart = new Chart(chartLine, {
 
 // 입/출금 페이지로 이동
 function goToManagePage() {
-  window.location.href = 'project3.html';
+  window.location.href = 'deposit-withdrawal.html';
 }
 
 // 캘린더 페이지로 이동
 function goToCalenderPage() {
-  window.location.href = 'project4.html';
+  window.location.href = 'calender.html';
 }
