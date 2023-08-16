@@ -1,7 +1,3 @@
-function goToJoinPage() {
-  window.location.href = 'signup.html';
-}
-
 (() => {
   window.addEventListener(
     "DOMContentLoaded",
@@ -12,3 +8,8 @@ function goToJoinPage() {
     }
   );
 })();
+
+function btnResign() {
+  const button = 
+  document.forms[1].querySelectorAll("button");
+}
