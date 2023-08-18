@@ -13,7 +13,7 @@ function goToJoinPage() {
       const password = document.getElementById("password").value;
 
       try{
-        const response = await fetch("http://localhost:8080/members");
+        const response = await fetch("http://127.0.0.1:5500/members");
         const members = await response.json();
 
         const validMember = members.find(
