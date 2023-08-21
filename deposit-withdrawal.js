@@ -1,3 +1,8 @@
+function getToken() {
+  const token = localStorage.getItem("token"); // 로컬 스토리지에서 토큰 가져오기
+  return token;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   // 입금-월-for문-셀렉티드
   const monthDropdown = document.getElementById("monthDropdown");
@@ -31,10 +36,9 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 
   // 서버전송
-
   const depositButton = document.getElementById("depositButton");
   depositButton.addEventListener("click", async () => {
-    
+    const token = getToken();
     const year = document.getElementById("yearSelect").value;
     const month = document.getElementById("monthDropdown").value;
     const day = document.getElementById("dayDropdown").value;
@@ -60,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(data),
         }
@@ -113,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // 서버전송
   const withdrawButton = document.getElementById("withdrawButton");
   withdrawButton.addEventListener("click", async () => {
+    const token = getToken();
     const year = document.getElementById("yearSelect").value;
     const month = document.getElementById("monthDropdown1").value;
     const day = document.getElementById("dayDropdown1").value;
@@ -134,7 +140,8 @@ document.addEventListener("DOMContentLoaded", function() {
       const response = await fetch("http://localhost:8080/financialHistories/add", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(data)
       });
