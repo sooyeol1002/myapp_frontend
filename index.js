@@ -43,11 +43,11 @@ import { saveToken } from './tokenUtils.js';
           )}`,
         },
       });
-
         if (response.ok) {
           const responseData = await response.json();
           const token = responseData.token;
-
+        const response = await fetch("http://127.0.0.1:5500/members");
+        const members = await response.json();
           saveToken(token);
           alert("로그인되었습니다.");
           window.location.href = '/deposit-withdrawal.html';
