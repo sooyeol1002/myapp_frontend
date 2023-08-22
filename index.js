@@ -2,7 +2,48 @@
 function goToJoinPage() {
   window.location.href = 'signup.html';
 }
+const params = new URLSearchParams(
+  window.location.search
+);
+if (params.get("err")) {
+  document.querySelector("#err").innerHTML = 
+  params.get("err");
+  history.replaceState(
+    null,
+    null,
+    "http://localhost:5500/index.html"
+  );
+}
+const btn = document.forms[0].querySelector("button");
+btn.addEventListener("click", (e) => {
+  e.preventDefault();
 
+  if (
+    !document.forms[0].querySelectorAll(
+      "input"
+    )[0].value
+  ) {
+    alert("사용자 이름을 입력해주세요.");
+    return;
+  }
+
+  if (
+    !document.forms[0].querySelectorAll(
+      "input"
+    )[1].value
+  ) {
+    alert("비밀번호를 입력해주세요.");
+    return;
+  }
+
+  document.forms[0].submit();
+});
+
+(() => {
+  const token = getCookie("token");
+  console.log(token);
+})();
+// 쿠키 값 가져오기 함수
 function getCookie(name) {
   let matches = document.cookie.match(
     new RegExp(
@@ -14,47 +55,5 @@ function getCookie(name) {
         "=([^;]*)"
     )
   );
-  return matches
-    ? decodeURIComponent(matches[1])
-    : undefined;
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
-
-// 인증토큰이 없으면 로그인페이지로 튕김
-(() => {
-  const token = getCookie("token");
-  console.log(token);
-})();
-
-import { saveToken } from './tokenUtils.js';
-
-// 로그인
-(() => {
-  window.addEventListener("DOMContentLoaded", async () => {
-    const loginButton = document.getElementById("loginButton");
-
-    loginButton.addEventListener("click", async () => {
-      let url = `http://localhost:8080/auth/login`
-      const name = document.getElementById("name").value;
-      const password = document.getElementById("password").value;
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${getCookie(
-            "token"
-          )}`,
-        },
-      });
-        if (response.ok) {
-          const responseData = await response.json();
-          const token = responseData.token;
-        const response = await fetch("http://127.0.0.1:5500/members");
-        const members = await response.json();
-          saveToken(token);
-          alert("로그인되었습니다.");
-          window.location.href = '/deposit-withdrawal.html';
-        } else {
-          alert("아이디/비밀번호를 확인해주세요.")
-        }
-    });
-  });
-})();
-

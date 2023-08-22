@@ -11,14 +11,13 @@
       <label for="name"
         >이름: <input type="text" id="name" name="name" required
       /></label>
-      <button type="button" id="loginButton" style="height: 70px">
-        로그인
-      </button>
+      <button style="height: 70px">로그인</button>
       <br />
       <label for="password"
         >비밀번호:
         <input type="password" id="password" name="password" required
       /></label>
+      <div id="err" style="color: red"></div>
       <br />
       <br />
       <button onclick="goToJoinPage()">
@@ -26,6 +25,6 @@
       </button>
       <!--  -->
     </form>
-    <script type="module" src="index.js"></script>
+    <script src="index.js"></script>
   </body>
 </html>
