@@ -46,12 +46,15 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     try {
+      const token = getCookie("token");
+
       const response = await fetch(
         "http://localhost:8080/financialHistories/add",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(data),
         }
@@ -116,10 +119,13 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     try {
+      const token = getCookie("token");
+
       const response = await fetch("http://localhost:8080/financialHistories/add", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(data)
       });
@@ -141,4 +147,18 @@ document.addEventListener("DOMContentLoaded", function() {
 // 캘린더 페이지로 이동
 function goToCalenderPage() {
   window.location.href = 'calender.html';
+}
+// 쿠키 값 가져오기 함수
+function getCookie(name) {
+  let matches = document.cookie.match(
+    new RegExp(
+      "(?:^|; )" +
+        name.replace(
+          /([\.$?*|{}\(\)\[\]\\\/\+^])/g,
+          "\\$1"
+        ) +
+        "=([^;]*)"
+    )
+  );
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }

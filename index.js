@@ -15,29 +15,24 @@ if (params.get("err")) {
   );
 }
 const btn = document.forms[0].querySelector("button");
-btn.addEventListener("click", (e) => {
+btn.addEventListener("click", async (e) => {
   e.preventDefault();
 
-  if (
-    !document.forms[0].querySelectorAll(
-      "input"
-    )[0].value
-  ) {
+  const nameInput = document.forms[0].querySelectorAll("input")[0];
+  const passwordInput = document.forms[0].querySelectorAll("input")[1];
+  if (!nameInput.value) {
     alert("사용자 이름을 입력해주세요.");
     return;
   }
 
-  if (
-    !document.forms[0].querySelectorAll(
-      "input"
-    )[1].value
-  ) {
+  if (!passwordInput.value) {
     alert("비밀번호를 입력해주세요.");
     return;
   }
 
   document.forms[0].submit();
 });
+
 
 (() => {
   const token = getCookie("token");
@@ -57,3 +52,9 @@ function getCookie(name) {
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+(() => {
+  const token = getCookie("token");
+  if (token) {
+    window.location.href = `deposit-withdrawal.html`;
+  };
+})();

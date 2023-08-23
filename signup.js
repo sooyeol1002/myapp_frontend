@@ -30,7 +30,7 @@ add.addEventListener("click", async (e) => {
   }
   try{
   const response = await fetch(
-    "http://localhost:8080/members",
+    "http://localhost:8080/auth/signup",
     {
       method: "POST",
       headers: {
