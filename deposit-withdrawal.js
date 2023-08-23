@@ -30,23 +30,22 @@ document.addEventListener("DOMContentLoaded", function() {
     selectedOption.selected = true;
   })
 
-  // 서버전송
+  // 입금 서버전송
   const depositButton = document.getElementById("depositButton");
   depositButton.addEventListener("click", async () => {
-    const year = document.getElementById("yearSelect").value;
-    const month = document.getElementById("monthDropdown").value;
-    const day = document.getElementById("dayDropdown").value;
-    const balance = parseFloat(document.getElementById("depositBalance").value);
-
-    const data = {
-      date: `${year}-${month}-${day}`,
-      deposit: balance,
-      withdraw: 0,
-      balance: balance,
-    };
-
     try {
-      const token = getCookie("token");
+
+      const year = document.getElementById("yearSelect").value;
+      const month = document.getElementById("monthDropdown").value;
+      const day = document.getElementById("dayDropdown").value;
+      const balance = parseFloat(document.getElementById("depositBalance").value);
+  
+      const data = {
+        date: `${year}-${month}-${day}`,
+        deposit: balance,
+        withdraw: 0,
+        balance: balance,
+      };
 
       const response = await fetch(
         "http://localhost:8080/financialHistories/add",
@@ -54,7 +53,9 @@ document.addEventListener("DOMContentLoaded", function() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${getCookie(
+              "token"
+            )}`,
           },
           body: JSON.stringify(data),
         }
@@ -103,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
     selectedOption.selected = true;
   });
 
-  // 서버전송
+  // 출금 서버전송
   const withdrawButton = document.getElementById("withdrawButton");
   withdrawButton.addEventListener("click", async () => {
     const year = document.getElementById("yearSelect").value;
@@ -160,5 +161,7 @@ function getCookie(name) {
         "=([^;]*)"
     )
   );
-  return matches ? decodeURIComponent(matches[1]) : undefined;
+  return matches
+    ? decodeURIComponent(matches[1])
+    : undefined;
 }
