@@ -1,22 +1,22 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // 입금-월-for문-셀렉티드
   const monthDropdown = document.getElementById("monthDropdown");
-  for(let i = 1; i <= 12; i++) {
+  for (let i = 1; i <= 12; i++) {
     const option = document.createElement("option");
     option.text = i + "월";
-    option.value = i< 10 ? "0" + i : "" + i;
+    option.value = i < 10 ? "0" + i : "" + i;
     monthDropdown.add(option);
   }
   monthDropdown.value = "08";
 
-  monthDropdown.addEventListener("change", function() {
+  monthDropdown.addEventListener("change", function () {
     const selectedOption = monthDropdown.options[monthDropdown.selectedIndex];
     selectedOption.selected = true;
-  })
+  });
 
   // 입금-일-for문-셀렉티드
   const dayDropdown = document.getElementById("dayDropdown");
-  for(let j = 1; j <= 31; j++) {
+  for (let j = 1; j <= 31; j++) {
     const option = document.createElement("option");
     option.text = j + "일";
     option.value = j < 10 ? "0" + j : "" + j;
@@ -25,39 +25,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
   dayDropdown.value = "08";
 
-  dayDropdown.addEventListener("change", function() {
+  dayDropdown.addEventListener("change", function () {
     const selectedOption = dayDropdown.options[dayDropdown.selectedIndex];
     selectedOption.selected = true;
-  })
+  });
 
   // 입금 서버전송
   const depositButton = document.getElementById("depositButton");
   depositButton.addEventListener("click", async () => {
     try {
-
       const year = document.getElementById("yearSelect").value;
       const month = document.getElementById("monthDropdown").value;
       const day = document.getElementById("dayDropdown").value;
-      const balance = parseFloat(document.getElementById("depositBalance").value);
-  
-      const data = {
-        date: `${year}-${month}-${day}`,
-        deposit: balance,
-        withdraw: 0,
+
+      const balance = parseFloat(
+        document.getElementById("depositBalance").value
+      );
+      const depositInput = document.getElementById("depositBalance");
+      const deposit = parseFloat(depositInput.value);
+      const depositRequest = {
+        selectedDate: `${year}-${month}-${day}`,
+        deposit: deposit,
         balance: balance,
       };
+      console.log(depositRequest);
 
       const response = await fetch(
-        "http://localhost:8080/financialHistories/add",
+        "http://localhost:8080/financialHistories/deposit",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${getCookie(
-              "token"
-            )}`,
+            Authorization: `Bearer ${getCookie("token")}`,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(depositRequest),
         }
       );
 
@@ -84,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   monthDropdown1.value = "08";
 
-  monthDropdown1.addEventListener("change", function() {
+  monthDropdown1.addEventListener("change", function () {
     const selectedOption = monthDropdown1.options[monthDropdown1.selectedIndex];
     selectedOption.selected = true;
   });
@@ -99,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
   dayDropdown1.value = "09";
 
-  dayDropdown1.addEventListener("change", function() {
+  dayDropdown1.addEventListener("change", function () {
     const selectedOption = dayDropdown1.options[dayDropdown1.selectedIndex];
     selectedOption.selected = true;
   });
@@ -110,26 +111,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const year = document.getElementById("yearSelect").value;
     const month = document.getElementById("monthDropdown1").value;
     const day = document.getElementById("dayDropdown1").value;
-    const balance = parseFloat(document.getElementById("withdrawBalance").value);
+    const balance = parseFloat(
+      document.getElementById("withdrawBalance").value
+    );
 
     const data = {
       date: `${year}-${month}-${day}`,
       deposit: 0,
       withdraw: balance,
-      balance: - balance
+      balance: -balance,
     };
 
     try {
       const token = getCookie("token");
 
-      const response = await fetch("http://localhost:8080/financialHistories/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify(data)
-      });
+      const response = await fetch(
+        "http://localhost:8080/financialHistories/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.ok) {
         const result = await response.json();
@@ -147,21 +153,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // 캘린더 페이지로 이동
 function goToCalenderPage() {
-  window.location.href = 'calender.html';
+  window.location.href = "calender.html";
 }
 // 쿠키 값 가져오기 함수
 function getCookie(name) {
   let matches = document.cookie.match(
     new RegExp(
       "(?:^|; )" +
-        name.replace(
-          /([\.$?*|{}\(\)\[\]\\\/\+^])/g,
-          "\\$1"
-        ) +
+        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
         "=([^;]*)"
     )
   );
-  return matches
-    ? decodeURIComponent(matches[1])
-    : undefined;
+  return matches ? decodeURIComponent(matches[1]) : undefined;
 }
