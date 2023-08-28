@@ -29,7 +29,6 @@ btn.addEventListener("click", async (e) => {
     alert("비밀번호를 입력해주세요.");
     return;
   }
-
   document.forms[0].submit();
 });
 
@@ -38,6 +37,8 @@ btn.addEventListener("click", async (e) => {
   const token = getCookie("token");
   console.log(token);
 })();
+
+
 // 쿠키 값 가져오기 함수
 function getCookie(name) {
   let matches = document.cookie.match(
@@ -54,6 +55,7 @@ function getCookie(name) {
 }
 (() => {
   const token = getCookie("token");
+  console.log(token)
   if (token) {
     window.location.href = `deposit-withdrawal.html`;
   };

@@ -108,32 +108,32 @@ document.addEventListener("DOMContentLoaded", function () {
   // 출금 서버전송
   const withdrawButton = document.getElementById("withdrawButton");
   withdrawButton.addEventListener("click", async () => {
+    try {
     const year = document.getElementById("yearSelect").value;
     const month = document.getElementById("monthDropdown1").value;
     const day = document.getElementById("dayDropdown1").value;
     const balance = parseFloat(
       document.getElementById("withdrawBalance").value
     );
+    const withdrawInput = document.getElementById("withdrawBalance");
+    const withdraw = parseFloat(withdrawInput.value);
 
-    const data = {
-      date: `${year}-${month}-${day}`,
-      deposit: 0,
-      withdraw: balance,
+    const withdrawRequest = {
+      selectedDate: `${year}-${month}-${day}`,
+      withdraw: withdraw,
       balance: -balance,
     };
-
-    try {
-      const token = getCookie("token");
+    console.log(withdrawRequest);
 
       const response = await fetch(
-        "http://localhost:8080/financialHistories/add",
+        "http://localhost:8080/financialHistories/withdraw",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getCookie("token")}`,
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(withdrawRequest),
         }
       );
 
