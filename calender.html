@@ -8,7 +8,8 @@
   </head>
   <style>
     .sec_cal {
-      width: 360px;
+      width: 560px;
+      height: 560px;
       margin: 0 auto;
       font-family: "NotoSansR";
     }
@@ -82,14 +83,10 @@
       border-bottom: 1px solid #ddd;
     }
 
-    .sec_cal .cal_wrap::after {
-      top: 368px;
-    }
-
     .sec_cal .cal_wrap .day {
       display: flex;
       align-items: center;
-      justify-content: center;
+      /* justify-content: center; 이거 수정 해야함 */
       width: calc(100% / 7);
       text-align: left;
       color: #999;
@@ -105,7 +102,25 @@
     .sec_cal .cal_wrap .dates {
       display: flex;
       flex-flow: wrap;
-      height: 290px;
+    }
+
+    .sec_cal .cal_wrap .day,
+    .sec_cal .cal_wrap .date-box {
+      display: flex;
+      flex-direction: column;
+      width: calc(100% / 7);
+      border-radius: 5px;
+      height: 80px;
+      padding-top: 5px;
+      position: relative;
+    }
+
+    .sec_cal .cal_wrap .date-box > .date {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
     }
 
     .sec_cal .cal_wrap .day:nth-child(7n) {
@@ -118,6 +133,33 @@
 
     .sec_cal .cal_wrap .day.disable {
       color: #ddd;
+    }
+
+    .day.has-data {
+      background: rgba(0, 150, 255, 0.2);
+    }
+
+    .sec_cal .cal_wrap .date-box > .deposit,
+    .sec_cal .cal_wrap .date-box > .withdraw {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .sec_cal .cal_wrap .date-box > .deposit {
+      top: 30%;
+    }
+
+    .sec_cal .cal_wrap .date-box > .withdraw {
+      top: 60%;
+    }
+
+    .deposit {
+      color: red;
+    }
+
+    .withdraw {
+      color: blue;
     }
   </style>
   <body>

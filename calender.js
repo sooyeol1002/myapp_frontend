@@ -62,7 +62,8 @@ function calendarInit() {
       }
       // 이번달
       for (let i = 1; i <= nextDate; i++) {
-          calendar.innerHTML = calendar.innerHTML + '<div class="day current">' + i + '</div>'
+          calendar.innerHTML += `<div class="day current" data-date="${currentYear}-${currentMonth + 1}-${i}">${i}</div>`;
+
       }
       // 다음달
       for (let i = 1; i <= (7 - nextDay == 7 ? 0 : 7 - nextDay); i++) {
@@ -75,6 +76,65 @@ function calendarInit() {
           const currentMonthDate = document.querySelectorAll('.dates .current');
           currentMonthDate[todayDate -1].classList.add('today');
       }
+
+      // 현재 월의 데이터 가져오기
+      fetchFinancialData(currentYear, currentMonth + 1).then(data => {
+        // 데이터가 있다면 날짜에 표시
+        if(data && data.length) {
+          const currentMonthDate = document.querySelectorAll('.dates .current');
+          data.forEach(item => {
+            const itemDate = new Date(item.date[0], item.date[1] - 1, item.date[2]).getDate();
+            const el = currentMonthDate[itemDate - 1];
+            if(item.deposit === 0 && item.withdraw === 0) {
+              el.classList.remove('has-data');
+            } else {
+              el.classList.add('has-data');
+            }
+            el.title = `입금: ${item.deposit}, 출금: ${item.withdraw}`;
+          });
+        }
+      });
+  }
+  function fetchFinancialData(year, month) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: `http://localhost:8080/financialHistories/by-month/${year}-${month}`,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+          'Authorization': `Bearer ${getCookie("token")}`
+        },
+        success: function(data) {
+          let totals = {};
+
+          for (let item of data) {
+            const dateKey = item.date.join("-");
+
+            if (!totals[dateKey]) {
+              totals[dateKey] = { deposit: 0, withdraw: 0 };
+            }
+            totals[dateKey].deposit += (item.deposit || 0);
+            totals[dateKey].withdraw += (item.withdraw || 0);
+          }
+          for (let dateKey in totals) {
+            const dayElement = $(`.day[data-date="${dateKey}"]`);
+            const total = totals[dateKey];
+
+            if (total.deposit && total.deposit > 0) {
+              dayElement.append(`<span class="deposit">+${total.deposit}</span>`);
+            }
+            if (total.withdraw && total.withdraw > 0) {
+              dayElement.append(`<span class="withdraw">-${total.withdraw}</span>`);
+            }
+          }
+          resolve(data);
+        },
+        error: function(error) {
+          console.error("Error fetching financial data", error);
+          reject(error);
+        }
+      });
+    });
   }
 
   // 이전달로 이동
@@ -99,3 +159,15 @@ function goToManagePage() {
 function goToChartPage() {
     window.location.href = 'chart.html';
   }
+
+  // 쿠키 값 가져오기 함수
+function getCookie(name) {
+  let matches = document.cookie.match(
+    new RegExp(
+      "(?:^|; )" +
+        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
+        "=([^;]*)"
+    )
+  );
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}
