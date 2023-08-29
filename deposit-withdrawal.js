@@ -152,8 +152,8 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // 캘린더 페이지로 이동
-function goToCalenderPage() {
-  window.location.href = "calender.html";
+function goToCalendarPage() {
+  window.location.href = "calendar.html";
 }
 // 쿠키 값 가져오기 함수
 function getCookie(name) {
