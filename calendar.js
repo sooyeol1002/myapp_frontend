@@ -47,8 +47,6 @@ function calendarInit() {
       const nextDate = endDay.getDate();
       const nextDay = endDay.getDay();
 
-      // console.log(prevDate, prevDay, nextDate, nextDay);
-
       // 현재 월 표기
       $('.year-month').text(currentYear + '.' + (currentMonth + 1));
 
@@ -62,9 +60,19 @@ function calendarInit() {
       }
       // 이번달
       for (let i = 1; i <= nextDate; i++) {
-          calendar.innerHTML += `<div class="day current" data-date="${currentYear}-${currentMonth + 1}-${i}">${i}</div>`;
+        const dateElement = document.createElement('div');
+        dateElement.className = "day current";
+        dateElement.dataset.date = `${currentYear}-${currentMonth + 1}-${i}`;
+        dateElement.textContent = i;
 
+        console.log(`${i} 일에 이벤트 리스너 추가`);
+
+        dateElement.addEventListener('click', function(e) {
+          handleDateclick(e.currentTarget.dataset.date);
+        });
+        calendar.appendChild(dateElement);
       }
+
       // 다음달
       for (let i = 1; i <= (7 - nextDay == 7 ? 0 : 7 - nextDay); i++) {
           calendar.innerHTML = calendar.innerHTML + '<div class="day next disable">' + i + '</div>'
@@ -95,6 +103,7 @@ function calendarInit() {
         }
       });
   }
+  // 금융기록 가져오기
   function fetchFinancialData(year, month) {
     return new Promise((resolve, reject) => {
       $.ajax({
@@ -136,6 +145,74 @@ function calendarInit() {
       });
     });
   }
+
+  // 특정 날짜의 금융기록 가져오기
+  function fetchFinancialDataByDate(date) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: `http://localhost:8080/financialHistories/by-date/${date}`,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+          'Authorization': `Bearer ${getCookie("token")}`
+        },
+        success: function(data) {
+          resolve(data);
+        },
+        error: function(error) {
+          console.error("Error fetching financial data", error);
+          reject(error);
+        }
+      });
+  });
+
+}
+
+// 특정 날짜의 금융기록 수정하기
+function updateFinancialData(date, newDeposit, newWithdraw) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `http://localhost:8080/financialHistories/update`,
+      type: 'PUT',
+      dataType: 'json',
+      headers: {
+        'Authorization': `Bearer ${getCookie("token")}`
+      },
+      data: JSON.stringify({
+        date: date,
+        deposit: newDeposit,
+        withdraw: newWithdraw
+      }),
+      success: function(data) {
+        resolve();
+      },
+      error: function(error) {
+        console.error("Error updating financial data", error);
+        reject(error);
+      }
+    });
+  });
+}
+
+// 특정 날짜의 금융기록 삭제하기
+function deleteFinancialData(date) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `http://localhost:8080/financialHistories/delete/${date}`,
+      type: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${getCookie("token")}`
+      },
+      success: function(data) {
+        resolve();
+      },
+      error: function(error) {
+        console.error("Error deleting financial data", error);
+        reject(error);
+      }
+    });
+  });
+}
 
   // 이전달로 이동
   $('.go-prev').on('click', function() {
