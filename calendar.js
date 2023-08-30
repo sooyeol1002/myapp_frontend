@@ -171,3 +171,34 @@ function getCookie(name) {
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+
+// 이름 가져오기
+async function fetchUserName() {
+  const token = getCookie("token");
+  const response = await fetch("http://localhost:8080/financialHistories/getName", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return data.name;
+  } else {
+    console.error("Failed to fetch name. Status code:", response.status);
+    return null;
+  }
+}
+
+// 이름 보여주기
+async function showUserName() {
+  const userName = await fetchUserName();
+    const userNameElement = document.getElementById('name');
+    if (userNameElement) {
+    userNameElement.textContent = `${userName}님의 캘린더 페이지입니다.`;
+  } 
+}
+
+window.onload = function() {
+  showUserName();
+}
