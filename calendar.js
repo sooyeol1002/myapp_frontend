@@ -184,11 +184,11 @@ function calendarInit() {
     }
 
     // 특정 날짜의 금융기록 수정하기
-    function updateFinancialData(date, newDeposit, newWithdraw) {
+    function updateFinancialData(id, date, newDeposit, newWithdraw) {
       const formattedDate = formatDateToTwoDigits(date);
       return new Promise((resolve, reject) => {
         $.ajax({
-          url: `http://localhost:8080/financialHistories/update/${formattedDate}`,
+          url: `http://localhost:8080/financialHistories/update/${id}/${formattedDate}`,
           type: "PUT",
           dataType: "json",
           contentType: "application/json",
@@ -199,6 +199,7 @@ function calendarInit() {
             date: formattedDate,
             deposit: newDeposit,
             withdraw: newWithdraw,
+            id: id
           }),
           success: function (response) {
             resolve(response);
@@ -253,6 +254,7 @@ function calendarInit() {
       const formattedDate = formatDateToTwoDigits(clickedDate);
       fetchFinancialDataByDate(formattedDate).then((data) => {
         if (data && data.length > 0) {
+          const id = data[0].id;
           const action = prompt(
             "원하시는 기능에 해당하는 숫자를 입력해주세요. (1: 수정, 2: 삭제, 3: 취소)",
             "1, 2, 3"
@@ -268,7 +270,7 @@ function calendarInit() {
                 "새로운 출금액을 입력하세요:",
                 data[0].withdraw
               );
-              updateFinancialData(clickedDate, newDeposit, newWithdraw).then(
+              updateFinancialData(id, clickedDate, newDeposit, newWithdraw).then(
                 () => {
                   renderCalender(thisMonth);
                 }
