@@ -53,7 +53,7 @@ function calendarInit() {
       dateElement.dataset.date = `${currentYear}-${currentMonth + 1}-${i}`;
       dateElement.textContent = i;
 
-      console.log(`${i} 일에 이벤트 리스너 추가`);
+      // console.log(`${i} 일에 이벤트 리스너 추가`);
 
       dateElement.addEventListener("click", function (e) {
         handleDateclick(e.currentTarget.dataset.date);
@@ -161,6 +161,9 @@ function calendarInit() {
     function fetchFinancialDataByDate(date) {
       return new Promise((resolve, reject) => {
         const formattedDate = formatDate(date);
+        if (typeof date === "string") {
+          date = new Date(date);
+        }
         $.ajax({
           url: `http://localhost:8080/financialHistories/by-date/${formattedDate}`,
           type: "GET",
@@ -182,15 +185,11 @@ function calendarInit() {
 
     // 특정 날짜의 금융기록 수정하기
     function updateFinancialData(date, newDeposit, newWithdraw) {
+      const formattedDate = formatDateToTwoDigits(date);
       return new Promise((resolve, reject) => {
-        const jsDate = new Date(date);
-        const formattedDate = `${date.getFullYear()}-${String(
-          jsDate.getMonth() + 1
-        ).padStart(2, "0")}-${String(jsDate.getDate()).padStart(2, "0")}`;
         $.ajax({
           url: `http://localhost:8080/financialHistories/update/${formattedDate}`,
           type: "PUT",
-          crossDomain: true,
           dataType: "json",
           contentType: "application/json",
           headers: {
@@ -201,8 +200,8 @@ function calendarInit() {
             deposit: newDeposit,
             withdraw: newWithdraw,
           }),
-          success: function (data) {
-            resolve();
+          success: function (response) {
+            resolve(response);
           },
           error: function (error) {
             console.error("Error updating financial data", error);
@@ -214,15 +213,16 @@ function calendarInit() {
 
     // 특정 날짜의 금융기록 삭제하기
     function deleteFinancialData(date) {
+      const formattedDate = formatDateToTwoDigits(date);
       return new Promise((resolve, reject) => {
         $.ajax({
-          url: `http://localhost:8080/financialHistories/delete/${date}`,
+          url: `http://localhost:8080/financialHistories/delete/${formattedDate}`,
           type: "DELETE",
           headers: {
             Authorization: `Bearer ${getCookie("token")}`,
           },
-          success: function (data) {
-            resolve();
+          success: function (response) {
+            resolve(response);
           },
           error: function (error) {
             console.error("Error deleting financial data", error);
@@ -240,10 +240,18 @@ function calendarInit() {
       });
     }
 
+    function formatDateToTwoDigits(dateString) {
+      const [year, month, day] = dateString.split("-");
+      const paddedMonth = month.padStart(2, "0");
+      const paddedDay = day.padStart(2, "0");
+      return `${year}-${paddedMonth}-${paddedDay}`;
+    }
+
     // 클릭한 날짜 처리
     function handleDateclick(clickedDate) {
       console.log(`Clicked date is ${clickedDate}`);
-      fetchFinancialDataByDate(clickedDate).then((data) => {
+      const formattedDate = formatDateToTwoDigits(clickedDate);
+      fetchFinancialDataByDate(formattedDate).then((data) => {
         if (data && data.length > 0) {
           const action = prompt(
             "원하시는 기능에 해당하는 숫자를 입력해주세요. (1: 수정, 2: 삭제, 3: 취소)",
@@ -356,3 +364,17 @@ async function showUserName() {
 window.onload = function () {
   showUserName();
 };
+
+// 쿠키 삭제
+function deleteCookie(name) {
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+// 로그아웃 버튼 이벤트
+document.addEventListener("DOMContentLoaded", function() {
+  const logoutButton = document.getElementById("logoutButton");
+  logoutButton.addEventListener("click", function() {
+    deleteCookie("token");
+    window.location.href = "/index.html";
+  });
+});

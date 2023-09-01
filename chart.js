@@ -1,3 +1,11 @@
+let totalDeposit = 0;
+let totalWithdraw = 0;
+
+let recentMonthDeposit = 0;
+let recentMonthWithdraw = 0;
+let lastMonthDeposit = 0;
+let lastMonthWithdraw = 0;
+
 // 데이터를 가져와 차트를 업데이트하는 함수
 async function fetchDataAndUpdateChart() {
   const token = getCookie("token");
@@ -13,19 +21,37 @@ async function fetchDataAndUpdateChart() {
     const data = await response.json();
     console.log("Received data from server:", data);
 
+    totalDeposit = 0;
+    totalWithdraw = 0;
+
+    let largestDepositWeek = "";
+    let largestDepositBalance = 0;
+
+    let largestWithdrawWeek = "";
+    let largestWithdrawBalance = 0;
+
+    let depositMonthCount = {};
+    let withdrawMonthCount = {};
+
+    data.forEach((item) => {
+      const month = item.date[1];
+
+      if(!depositMonthCount[month]) depositMonthCount[month] = 0;
+      if(!withdrawMonthCount[month]) withdrawMonthCount[month] = 0;
+
+      depositMonthCount[month] += 1;
+      withdrawMonthCount[month] += 1;
+    });
+
+    let recentMonths = [];
+
     const depositAmountsByMonth = new Array(12).fill(0);
     const withdrawAmountsByMonth = new Array(12).fill(0);
 
     const depositMap = {};
     const withdrawMap = {};
-    const usedWeekLabels = new Set();
 
-    // function getLastWeekOfMonth(year, month) {
-    //   const lastDay = new Date(year, month, 0).getDate();
-    //   const date = new Date(year, month - 1, lastDay);
-    //   const dayOfWeek = date.getDay();
-    //   return Math.floor((lastDay + 6 - dayOfWeek) / 7);
-    // }
+    const usedWeekLabels = new Set();
 
     function calculateWeekIndex(year, month, day) {
       const date = new Date(year, month - 1, day);
@@ -61,13 +87,51 @@ async function fetchDataAndUpdateChart() {
       depositMap[label] += item.deposit;
       withdrawMap[label] += item.withdraw;
 
+      depositAmountsByMonth[month - 1] += item.deposit;
+      withdrawAmountsByMonth[month - 1] += item.withdraw;
+
+      if (depositMap[label] > largestDepositBalance) {
+        largestDepositBalance = depositMap[label];
+        largestDepositWeek = label;
+      }
+
+      if (withdrawMap[label] > largestWithdrawBalance) {
+        largestWithdrawBalance = withdrawMap[label];
+        largestWithdrawWeek = label;
+      }
+
       usedWeekLabels.add(`${month}월 ${week}주차`);
     })
 
     data.forEach((item) => {
       const month = item.date[1] -1;
+
+      totalDeposit += item.deposit;
+      totalWithdraw += item.withdraw;
+
       depositAmountsByMonth[month] += item.deposit;
       withdrawAmountsByMonth[month] += item.withdraw;
+    });
+
+    data.forEach((item) => {
+      const month = item.date[1];
+      if (!recentMonths.includes(month)) {
+        recentMonths.push(month);
+      }
+    });
+
+    recentMonths.sort((a, b) => b - a);
+    recentMonths = recentMonths.slice(0, 2);
+
+    data.forEach((item) => {
+      const month = item.date[1];
+      if (month === recentMonths[0]) {
+        recentMonthDeposit += item.deposit;
+        recentMonthWithdraw += item.withdraw;
+      } else if (month === recentMonths[1]) {
+        lastMonthDeposit += item.deposit;
+        lastMonthWithdraw += item.withdraw;
+      }
     });
 
     const sortedLabels = Array.from(usedWeekLabels).sort((a, b) => {
@@ -91,8 +155,36 @@ async function fetchDataAndUpdateChart() {
     myLineChart.update();
 
     console.log("Charts updated.");
+    showTotalBalance(depositMonthCount, withdrawMonthCount, largestDepositWeek, largestWithdrawWeek, depositAmountsByMonth, withdrawAmountsByMonth);
   } else {
     console.error("Failed to fetch data. Status code:", response.status);
+  }
+}
+
+async function showTotalBalance(depositMonthCount, withdrawMonthCount, largestDepositWeek, largestWithdrawWeek, depositAmountsByMonth, withdrawAmountsByMonth) {
+  const userName = await fetchUserName();
+  const summaryElement = document.getElementById('summary');
+  if (summaryElement) {
+    let depositAverageText = "";
+    let withdrawAverageText = "";
+
+    for (const month in depositMonthCount) {
+      const average = depositAmountsByMonth[month - 1] / depositMonthCount[month];
+      depositAverageText += `${month}월 평균 입금액: ${average}원<br>`;
+    }
+
+    for (const month in withdrawMonthCount) {
+      const average = withdrawAmountsByMonth[month - 1] / withdrawMonthCount[month];
+      withdrawAverageText += `${month}월 평균 출금액: ${average}원<br>`;
+    }
+
+    summaryElement.innerHTML = `${userName}님의 통계 <br>
+    총 입금액은: ${totalDeposit}원 입니다.<br>
+    총 출금액은: ${totalWithdraw}원 입니다.<br>
+    가장 큰 입금량이 있던 주: ${largestDepositWeek}<br>
+    가장 큰 출금량이 있던 주: ${largestWithdrawWeek}<br>
+    ${depositAverageText}<br>
+    ${withdrawAverageText}`;
   }
 }
 
@@ -230,3 +322,17 @@ async function showUserName() {
     userNameElement.textContent = `${userName}님의 차트 페이지입니다.`;
   } 
 }
+
+// 쿠키 삭제
+function deleteCookie(name) {
+  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+// 로그아웃 버튼 이벤트
+document.addEventListener("DOMContentLoaded", function() {
+  const logoutButton = document.getElementById("logoutButton");
+  logoutButton.addEventListener("click", function() {
+    deleteCookie("token");
+    window.location.href = "/index.html";
+  });
+});

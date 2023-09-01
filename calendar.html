@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
     <title>Document</title>
   </head>
   <style>
@@ -138,6 +142,7 @@
 
     .day.has-data {
       background: rgba(0, 150, 255, 0.2);
+      cursor: pointer;
     }
 
     .sec_cal .cal_wrap .date-box > .deposit,
@@ -162,8 +167,23 @@
     .withdraw {
       color: blue;
     }
+    .logout-button {
+      background-color: blue;
+      border: none;
+      color: white;
+      border-radius: 50%; /* 동그란 모양 */
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      cursor: pointer;
+    }
   </style>
   <body>
+    <div style="position: absolute; top: 10px; right: 10px">
+      <button id="logoutButton" class="logout-button">
+        <i class="fas fa-unlock"></i>
+      </button>
+    </div>
     <div id="name"></div>
     <br /><br />
     <div class="sec_cal">
