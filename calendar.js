@@ -184,11 +184,11 @@ function calendarInit() {
     }
 
     // 특정 날짜의 금융기록 수정하기
-    function updateFinancialData(date, newDeposit, newWithdraw) {
+    function updateFinancialData(id, date, newDeposit, newWithdraw) {
       const formattedDate = formatDateToTwoDigits(date);
       return new Promise((resolve, reject) => {
         $.ajax({
-          url: `http://localhost:8080/financialHistories/update/${formattedDate}`,
+          url: `http://localhost:8080/financialHistories/update/${id}/${formattedDate}`,
           type: "PUT",
           dataType: "json",
           contentType: "application/json",
@@ -248,11 +248,12 @@ function calendarInit() {
     }
 
     // 클릭한 날짜 처리
-    function handleDateclick(clickedDate) {
+    function handleDateclick(clickedDate, id) {
       console.log(`Clicked date is ${clickedDate}`);
       const formattedDate = formatDateToTwoDigits(clickedDate);
       fetchFinancialDataByDate(formattedDate).then((data) => {
         if (data && data.length > 0) {
+          const id = data[0].id;
           const action = prompt(
             "원하시는 기능에 해당하는 숫자를 입력해주세요. (1: 수정, 2: 삭제, 3: 취소)",
             "1, 2, 3"
@@ -268,11 +269,14 @@ function calendarInit() {
                 "새로운 출금액을 입력하세요:",
                 data[0].withdraw
               );
-              updateFinancialData(clickedDate, newDeposit, newWithdraw).then(
-                () => {
-                  renderCalender(thisMonth);
-                }
-              );
+              updateFinancialData(
+                id,
+                clickedDate,
+                newDeposit,
+                newWithdraw
+              ).then(() => {
+                renderCalender(thisMonth);
+              });
               break;
             case "2":
               const confirmDelete = confirm("이 데이터를 삭제하시겠습니까?");
@@ -371,9 +375,9 @@ function deleteCookie(name) {
 }
 
 // 로그아웃 버튼 이벤트
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("logoutButton");
-  logoutButton.addEventListener("click", function() {
+  logoutButton.addEventListener("click", function () {
     deleteCookie("token");
     window.location.href = "/index.html";
   });
