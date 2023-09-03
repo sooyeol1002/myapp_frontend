@@ -168,7 +168,7 @@
       color: blue;
     }
     .logout-button {
-      background-color: blue;
+      background-color: #87ceeb;
       border: none;
       color: white;
       border-radius: 50%; /* 동그란 모양 */
@@ -177,36 +177,92 @@
       font-size: 24px;
       cursor: pointer;
     }
+    #name {
+      font-family: "NotoSansR";
+      font-weight: 700;
+      font-size: 24px;
+      color: #333333;
+      margin-bottom: 20px;
+    }
+    .general-button {
+      background-color: #87ceeb;
+      border: none;
+      color: white;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      font-family: "NotoSansR";
+    }
+
+    .general-button:hover {
+      background-color: #7ec0ee;
+    }
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    body {
+      background-color: #f4f4f4;
+      font-family: "NotoSansR";
+    }
+    .header {
+      background-color: #7ec0ee;
+      color: white;
+      padding: 1em;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 20px;
+      margin: auto;
+      max-width: 800px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
   </style>
   <body>
-    <div style="position: absolute; top: 10px; right: 10px">
-      <button id="logoutButton" class="logout-button">
-        <i class="fas fa-unlock"></i>
-      </button>
-    </div>
-    <div id="name"></div>
-    <br /><br />
-    <div class="sec_cal">
-      <div class="cal_nav">
-        <a href="javascript:;" class="nav-btn go-prev">prev</a>
-        <div class="year-month"></div>
-        <a href="javascript:;" class="nav-btn go-next">next</a>
+    <div class="header">내 기록 돌아보기</div>
+    <div class="container">
+      <div style="position: absolute; top: 10px; right: 10px">
+        <button id="logoutButton" class="logout-button">
+          <i class="fas fa-unlock"></i>
+        </button>
       </div>
-      <div class="cal_wrap">
-        <div class="days">
-          <div class="day">SUN</div>
-          <div class="day">MON</div>
-          <div class="day">TUE</div>
-          <div class="day">WED</div>
-          <div class="day">THU</div>
-          <div class="day">FRI</div>
-          <div class="day">SAT</div>
+      <div id="name"></div>
+      <br /><br />
+      <div class="sec_cal">
+        <div class="cal_nav">
+          <a href="javascript:;" class="nav-btn go-prev">prev</a>
+          <div class="year-month"></div>
+          <a href="javascript:;" class="nav-btn go-next">next</a>
         </div>
-        <div class="dates"></div>
+        <div class="cal_wrap">
+          <div class="days">
+            <div class="day">SUN</div>
+            <div class="day">MON</div>
+            <div class="day">TUE</div>
+            <div class="day">WED</div>
+            <div class="day">THU</div>
+            <div class="day">FRI</div>
+            <div class="day">SAT</div>
+          </div>
+          <div class="dates"></div>
+        </div>
+      </div>
+      <div class="button-container">
+        <button class="general-button" onclick="goToManagePage()">
+          입/출금
+        </button>
+        <button class="general-button" onclick="goToChartPage()">
+          차트페이지
+        </button>
       </div>
     </div>
-    <button onclick="goToManagePage()">입/출금</button>
-    <button onclick="goToChartPage()">차트페이지</button>
     <script src="calendar.js"></script>
   </body>
 </html>

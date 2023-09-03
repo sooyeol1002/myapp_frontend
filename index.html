@@ -3,21 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>소비생활 돌아보기</title>
   </head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      background-color: #87ceeb;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-bottom: 150px;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fff;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 20px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #87ceeb;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #7ec0ee;
+    }
+  </style>
   <body>
     <h1>소비생활 돌아보기</h1>
     <form action="http://localhost:8080/auth/login" method="post" id="login">
       <label for="name"
         >이름: <input type="text" id="name" name="name" required
       /></label>
-      <button style="height: 70px">로그인</button>
       <br />
       <label for="password"
         >비밀번호:
         <input type="password" id="password" name="password" required
       /></label>
-      <div id="err" style="color: red"></div>
+      <button style="height: 70px">로그인</button>
       <br />
       <br />
       <button onclick="goToJoinPage()">
