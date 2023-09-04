@@ -1,13 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
   // 입금-월-for문-셀렉티드
   const monthDropdown = document.getElementById("monthDropdown");
+  const defaultMonthOption = document.createElement("option");
+  defaultMonthOption.text = "월을 선택하세요.";
+  defaultMonthOption.value = "";
+  defaultMonthOption.selected = true;
+  defaultMonthOption.disabled = true;
+  monthDropdown.add(defaultMonthOption);
+
   for (let i = 1; i <= 12; i++) {
     const option = document.createElement("option");
     option.text = i + "월";
     option.value = i < 10 ? "0" + i : "" + i;
     monthDropdown.add(option);
   }
-  monthDropdown.value = "08";
 
   monthDropdown.addEventListener("change", function () {
     const selectedOption = monthDropdown.options[monthDropdown.selectedIndex];
@@ -16,14 +22,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 입금-일-for문-셀렉티드
   const dayDropdown = document.getElementById("dayDropdown");
+  const defaultDayOption = document.createElement("option");
+  defaultDayOption.text = "일을 선택하세요";
+  defaultDayOption.value = "";
+  defaultDayOption.selected = true;
+  defaultDayOption.disabled = true;
+  dayDropdown.add(defaultDayOption);
+
   for (let j = 1; j <= 31; j++) {
     const option = document.createElement("option");
     option.text = j + "일";
     option.value = j < 10 ? "0" + j : "" + j;
     dayDropdown.add(option);
   }
-
-  dayDropdown.value = "08";
 
   dayDropdown.addEventListener("change", function () {
     const selectedOption = dayDropdown.options[dayDropdown.selectedIndex];
@@ -66,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const result = await response.json();
         alert("입금이 완료되었습니다.");
         console.log(result);
+        document.getElementById("depositBalance").value = "";
       } else {
         const error = await response.json();
         alert("입금에 실패했습니다: " + error.message);
@@ -77,13 +89,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 출금-월-for문-셀렉티드
   const monthDropdown1 = document.getElementById("monthDropdown1");
+  const defaultMonthOption1 = document.createElement("option");
+  defaultMonthOption1.text = "월을 선택하세요";
+  defaultMonthOption1.value = "";
+  defaultMonthOption1.selected = true;
+  defaultMonthOption1.disabled = true;
+  monthDropdown1.add(defaultMonthOption1);
+
   for (let i = 1; i <= 12; i++) {
     const option = document.createElement("option");
     option.text = i + "월";
     option.value = i < 10 ? "0" + i : "" + i;
     monthDropdown1.add(option);
   }
-  monthDropdown1.value = "08";
 
   monthDropdown1.addEventListener("change", function () {
     const selectedOption = monthDropdown1.options[monthDropdown1.selectedIndex];
@@ -92,13 +110,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 출금-일-for문-셀렉티드
   const dayDropdown1 = document.getElementById("dayDropdown1");
+  const defaultDayOption1  = document.createElement("option");
+  defaultDayOption1.text = "일을 선택하세요";
+  defaultDayOption1.value = "";
+  defaultDayOption1.selected = true;
+  defaultDayOption1.disabled = true;
+  dayDropdown1.add(defaultDayOption1);
+
   for (let j = 1; j <= 31; j++) {
     const option = document.createElement("option");
     option.text = j + "일";
     option.value = j < 10 ? "0" + j : "" + j;
     dayDropdown1.add(option);
   }
-  dayDropdown1.value = "09";
 
   dayDropdown1.addEventListener("change", function () {
     const selectedOption = dayDropdown1.options[dayDropdown1.selectedIndex];
@@ -141,6 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const result = await response.json();
         alert("출금이 완료되었습니다.");
         console.log(result);
+        document.getElementById("withdrawBalance").value = "";
       } else {
         const error = await response.json();
         alert("출금에 실패했습니다: " + error.message);

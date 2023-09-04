@@ -169,13 +169,13 @@ async function showTotalBalance(depositMonthCount, withdrawMonthCount, largestDe
     let withdrawAverageText = "";
 
     for (const month in depositMonthCount) {
-      const average = depositAmountsByMonth[month - 1] / depositMonthCount[month];
-      depositAverageText += `${month}월 평균 입금액: ${average}원<br>`;
+      const average = (depositAmountsByMonth[month - 1] / depositMonthCount[month]).toFixed(1);
+      depositAverageText += `${month}월 주간 평균 입금액: ${average}원<br>`;
     }
 
     for (const month in withdrawMonthCount) {
-      const average = withdrawAmountsByMonth[month - 1] / withdrawMonthCount[month];
-      withdrawAverageText += `${month}월 평균 출금액: ${average}원<br>`;
+      const average = (withdrawAmountsByMonth[month - 1] / withdrawMonthCount[month]).toFixed(1);
+      withdrawAverageText += `${month}월 주간 평균 출금액: ${average}원<br>`;
     }
 
     summaryElement.innerHTML = `${userName}님의 통계 <br>
