@@ -11,33 +11,81 @@
     <title>Document</title>
   </head>
   <style>
+    body {
+      font-family: "Noto Sans", sans-serif;
+      background-color: #f5f5f5;
+    }
+    .container {
+      margin: auto;
+      padding: 20px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
     .logout-button {
-      background-color: blue;
+      background-color: #87ceeb;
       border: none;
       color: white;
-      border-radius: 50%; /* 동그란 모양 */
+      border-radius: 50%;
       width: 40px;
       height: 40px;
       font-size: 24px;
       cursor: pointer;
     }
+    .general-button {
+      background-color: #87ceeb;
+      color: white;
+      border: none;
+      padding: 15px;
+      margin: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #7ec0ee;
+    }
+    canvas {
+      max-width: 100%;
+    }
+    #summary {
+      font-family: "Noto Sans", sans-serif;
+      font-size: 16px;
+      color: #555;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+
+      text-align: center;
+    }
+
+    /* 버튼 위치 조정 */
+    .button-container {
+      text-align: center;
+      margin-top: 20px;
+    }
   </style>
   <body>
-    <div id="name"></div>
-    <div style="position: absolute; top: 10px; right: 10px">
-      <button id="logoutButton" class="logout-button">
-        <i class="fas fa-unlock"></i>
-      </button>
-    </div>
-    <div>
-      <canvas id="myBarChart"></canvas>
-    </div>
-    <div>
-      <canvas id="myLineChart"></canvas>
+    <div class="container">
+      <div id="name"></div>
+      <div style="position: absolute; top: 10px; right: 10px">
+        <button id="logoutButton" class="logout-button">
+          <i class="fas fa-unlock"></i>
+        </button>
+      </div>
+      <div>
+        <canvas id="myBarChart"></canvas>
+      </div>
+      <div>
+        <canvas id="myLineChart"></canvas>
+      </div>
+      <div id="summary"></div>
+      <div class="button-container">
+        <button class="general-button" onclick="goToManagePage()">
+          입/출금
+        </button>
+        <button class="general-button" onclick="goToCalendarPage()">
+          캘린더페이지
+        </button>
+      </div>
     </div>
     <script src="chart.js"></script>
-    <div id="summary"></div>
   </body>
-  <button onclick="goToManagePage()">입/출금</button>
-  <button onclick="goToCalendarPage()">캘린더페이지</button>
 </html>

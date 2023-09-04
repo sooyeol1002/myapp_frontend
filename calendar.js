@@ -249,7 +249,7 @@ function calendarInit() {
     }
 
     // 클릭한 날짜 처리
-    function handleDateclick(clickedDate) {
+    function handleDateclick(clickedDate, id) {
       console.log(`Clicked date is ${clickedDate}`);
       const formattedDate = formatDateToTwoDigits(clickedDate);
       fetchFinancialDataByDate(formattedDate).then((data) => {
@@ -270,11 +270,14 @@ function calendarInit() {
                 "새로운 출금액을 입력하세요:",
                 data[0].withdraw
               );
-              updateFinancialData(id, clickedDate, newDeposit, newWithdraw).then(
-                () => {
-                  renderCalender(thisMonth);
-                }
-              );
+              updateFinancialData(
+                id,
+                clickedDate,
+                newDeposit,
+                newWithdraw
+              ).then(() => {
+                renderCalender(thisMonth);
+              });
               break;
             case "2":
               const confirmDelete = confirm("이 데이터를 삭제하시겠습니까?");
@@ -373,9 +376,9 @@ function deleteCookie(name) {
 }
 
 // 로그아웃 버튼 이벤트
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const logoutButton = document.getElementById("logoutButton");
-  logoutButton.addEventListener("click", function() {
+  logoutButton.addEventListener("click", function () {
     deleteCookie("token");
     window.location.href = "/index.html";
   });
