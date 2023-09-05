@@ -87,9 +87,6 @@ async function fetchDataAndUpdateChart() {
       depositMap[label] += item.deposit;
       withdrawMap[label] += item.withdraw;
 
-      depositAmountsByMonth[month - 1] += item.deposit;
-      withdrawAmountsByMonth[month - 1] += item.withdraw;
-
       if (depositMap[label] > largestDepositBalance) {
         largestDepositBalance = depositMap[label];
         largestDepositWeek = label;
