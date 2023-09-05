@@ -28,11 +28,11 @@ function calendarInit() {
     // 이전 달의 마지막 날 날짜와 요일 구하기
     const startDay = new Date(currentYear, currentMonth, 0);
     const prevDate = startDay.getDate();
-    const prevDay = startDay.getDay();
+    const prevDay = startDay.getDay() + 1;
     // 이번 달의 마지막날 날짜와 요일 구하기
     const endDay = new Date(currentYear, currentMonth + 1, 0);
     const nextDate = endDay.getDate();
-    const nextDay = endDay.getDay();
+    const nextDay = endDay.getDay() + 1;
 
     // 현재 월 표기
     $(".year-month").text(currentYear + "." + (currentMonth + 1));

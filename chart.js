@@ -57,19 +57,43 @@ async function fetchDataAndUpdateChart() {
       const date = new Date(year, month - 1, day);
       const dayOfWeek = date.getDay();
       
-      const firstDayOfMonth = new Date(year, month -1, 1).getDay();
+      const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
       const lastDayOfMonth = new Date(year, month - 1, new Date(year, month, 0).getDate()).getDay();
-
-      let firstSaturday = 6 -firstDayOfMonth + 1;
-      if (day <= firstSaturday) {
-        return 1;
+      
+      // 1일이 금요일인 경우
+      if (firstDayOfMonth === 5) {
+        if (day === 1 || day === 2) {
+          return 1;
+        }
       }
-
-      let week = Math.ceil((day - firstSaturday) / 7) + 1;
-
-      if (lastDayOfMonth === 0) {
-        week += 1;
+      
+      // 1일이 토요일인 경우
+      if (firstDayOfMonth === 6) {
+        if (day === 1) {
+          return 1;
+        }
       }
+      
+      // 일반적인 주차 계산 (일요일을 주의 시작으로)
+      let firstSunday = 1 + (7 - firstDayOfMonth) % 7; // 해당 달의 첫번째 일요일
+      let week;
+    
+      // 첫 주차인 경우
+      if (day < firstSunday) {
+        week = 1;
+      } else {
+        week = 1 + Math.ceil((day - firstSunday) / 7);
+      }
+    
+      // 마지막 날이 일요일인 경우
+      if (lastDayOfMonth === 0 && day === new Date(year, month, 0).getDate()) {
+        if (week === 4) {
+          week = 5;
+        } else if (week === 5) {
+          week = 6;
+        }
+      }
+      
       return week;
     }
 
