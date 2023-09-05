@@ -176,10 +176,17 @@ async function showTotalBalance(depositMonthCount, withdrawMonthCount, largestDe
     }
 
     summaryElement.innerHTML = `${userName}님의 통계 <br>
-    총 입금액은: ${totalDeposit}원 입니다.<br>
-    총 출금액은: ${totalWithdraw}원 입니다.<br>
+    <br>
+    잔액: ${totalDeposit - totalWithdraw} 원 입니다. <br>
+    <br>
+    총 입금액: ${totalDeposit}원 입니다.<br>
+    <br>
+    총 출금액: ${totalWithdraw}원 입니다.<br>
+    <br>
     가장 큰 입금량이 있던 주: ${largestDepositWeek}<br>
+    <br>
     가장 큰 출금량이 있던 주: ${largestWithdrawWeek}<br>
+    <br>
     ${depositAverageText}<br>
     ${withdrawAverageText}`;
   }
