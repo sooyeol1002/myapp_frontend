@@ -54,45 +54,21 @@ async function fetchDataAndUpdateChart() {
     const usedWeekLabels = new Set();
 
     function calculateWeekIndex(year, month, day) {
-      const date = new Date(year, month - 1, day);
+      const date = new Date(year, month - 1, day);  // month - 1 because JavaScript month index starts from 0
+      const firstDayOfMonth = new Date(year, month - 1, 1);
+      let week;
+      
+      // 일요일이 주의 시작이므로 dayOfWeek는 0
       const dayOfWeek = date.getDay();
       
-      const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
-      const lastDayOfMonth = new Date(year, month - 1, new Date(year, month, 0).getDate()).getDay();
-      
-      // 1일이 금요일인 경우
-      if (firstDayOfMonth === 5) {
-        if (day === 1 || day === 2) {
-          return 1;
-        }
+      // 해당 달의 첫 주의 일요일을 찾기
+      let firstSunday = firstDayOfMonth;
+      while (firstSunday.getDay() !== 0) {
+        firstSunday.setDate(firstSunday.getDate() + 1);
       }
       
-      // 1일이 토요일인 경우
-      if (firstDayOfMonth === 6) {
-        if (day === 1) {
-          return 1;
-        }
-      }
-      
-      // 일반적인 주차 계산 (일요일을 주의 시작으로)
-      let firstSunday = 1 + (7 - firstDayOfMonth) % 7; // 해당 달의 첫번째 일요일
-      let week;
-    
-      // 첫 주차인 경우
-      if (day < firstSunday) {
-        week = 1;
-      } else {
-        week = 1 + Math.ceil((day - firstSunday) / 7);
-      }
-    
-      // 마지막 날이 일요일인 경우
-      if (lastDayOfMonth === 0 && day === new Date(year, month, 0).getDate()) {
-        if (week === 4) {
-          week = 5;
-        } else if (week === 5) {
-          week = 6;
-        }
-      }
+      // 첫 주의 일요일을 기준으로 주차 계산
+      week = Math.ceil((day - firstSunday.getDate() + 1) / 7) + 1;
       
       return week;
     }
