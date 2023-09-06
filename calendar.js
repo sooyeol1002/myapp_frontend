@@ -55,9 +55,6 @@ function calendarInit() {
 
       // console.log(`${i} 일에 이벤트 리스너 추가`);
 
-      dateElement.addEventListener("click", function (e) {
-        handleDateclick(e.currentTarget.dataset.date);
-      });
       calendar.appendChild(dateElement);
     }
 
